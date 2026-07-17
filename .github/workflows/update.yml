@@ -2,7 +2,7 @@ name: Update Banner
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -17,7 +17,9 @@ jobs:
 
       - name: Download banner
         run: |
-          curl -L "https://api.mcstatus.io/v2/widget/java/phymlymc.com" -o status.png
+          curl -L "https://api.mcstatus.io/v2/widget/java/phymlymc.com?cachebust=$(date +%s)" -o status.png
+          file status.png
+          ls -lh status.png
 
       - name: Commit changes
         run: |
@@ -27,8 +29,8 @@ jobs:
           git add status.png
 
           if git diff --cached --quiet; then
-            echo "No changes"
+            echo "No changes detected"
           else
-            git commit -m "Update banner"
+            git commit -m "Update Minecraft server banner"
             git push
           fi
